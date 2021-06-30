@@ -1,0 +1,124 @@
+<!--
+
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento Facial</title>
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+        integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+        crossorigin="anonymous" />
+</head>
+
+<body>
+
+    <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <img alt=""
+                    src="#"
+                    style="max-height: 80px" />
+            </a>
+            <button class="navbar-burger is-warning button" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="./">FACE RECOGNIZER</a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/mfrodriguezc/"
+                            class="button is-primary">
+                            <strong>Sobre Mi</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const boton = document.querySelector(".navbar-burger");
+            const menu = document.querySelector(".navbar-menu");
+            boton.onclick = () => {
+                menu.classList.toggle("is-active");
+                boton.classList.toggle("is-active");
+            };
+        });
+
+
+    </script>
+    <section class="section">
+        <div class="columns">
+            <div class="column has-text-centered">
+                <figure class="image has-text-centered">
+
+                    <img class="is-inline-block" src="./streaming_camara" style="width: auto">
+                </figure>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+                              
+               
+                <button id="btnTomarFotosyEntrenar" class="button is-success mb-2">Tomar y procesar fotos 
+                    &nbsp;<i class="fa fa-camera fa-xs"></i>&nbsp;
+                    <i class="fa fa-download"></i>
+                </button>
+                
+                <div class="notification is-primary mt-2" id="estado">Panel de información</div>
+                <br>
+                <button id="btnReconocer" class="button is-danger my-2">Reconocer Rostro</button>
+            </div>
+        </div>
+        <script type="text/javascript">
+            const $btnTomarFotosyEntrenar = document.querySelector("#btnTomarFotosyEntrenar"),
+                $btnReconocer = document.querySelector("#btnReconocer"),
+                $estado = document.querySelector("#estado");
+
+            
+                        
+            /*
+                Iniciar grabación
+            */
+            $btnTomarFotosyEntrenar.onclick = async () => {
+                $estado.textContent = "Tomando y procesando fotos, por favor espere...";
+                const respuestaRaw = await fetch("./tomar_y_entrenar_fotos");
+                const respuesta = await respuestaRaw.json();
+                if (respuesta) {
+                    $estado.textContent = "Entrenamiento de fotos concluido con exito...";
+                    
+                } else {
+                    $estado.textContent = "Error Error Error";
+            
+                }
+            };
+            $btnReconocer.onclick = async () => {
+                $estado.textContent = "Reconociendo rostro...";
+                const respuestaRaw = await fetch("./reconocer");
+                const respuesta = await respuestaRaw.json();
+                let mensaje = "";
+                if (respuesta.ok) {
+                    mensaje = `La persona es: ${respuesta.nombre_foto}`;
+                } else {
+                    mensaje = `Error Error Error`;
+                }
+                $estado.textContent = mensaje;
+            };
+
+            
+        </script>
+    </section>
+</body>
+
+</html>
